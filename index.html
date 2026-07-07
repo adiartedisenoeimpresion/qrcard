@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarjeta de Presentación Digital</title>
+    <!-- Iconos de FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==========================================================================
+           CONFIGURACIÓN DE DISEÑO (Cambia los colores aquí si lo deseas)
+           ========================================================================== */
+        :root {
+            --bg-gradient-1: #0f172a; /* Fondo oscuro (Slate 900) */
+            --bg-gradient-2: #1e1b4b; /* Fondo oscuro e índigo */
+            --card-bg: rgba(255, 255, 255, 0.03); /* Transparencia de la tarjeta */
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-color: #6366f1; /* Color de los botones e iconos */
+            --accent-hover: #4f46e5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2));
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        /* Contenedor de la Tarjeta */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            width: 100%;
+            max-width: 400px;
+            border-radius: 24px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Avatar / Foto de Perfil */
+        .profile-img-container {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 20px;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+            padding: 3px;
+        }
+
+        /* Información Principal */
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .profile-title {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+
+        .profile-bio {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 28px;
+            padding: 0 10px;
+        }
+
+        /* Contenedor de Enlaces / Redes Sociales */
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 14px 20px;
+            border-radius: 14px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+        }
+
+        .social-link i {
+            font-size: 1.25rem;
+            width: 30px;
+            text-align: left;
+            color: var(--accent-color);
+            transition: color 0.25s ease;
+        }
+
+        .social-link:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .social-link:hover i {
+            color: var(--text-main);
+        }
+
+        /* Botón de Acción Principal (Guardar Contacto) */
+        .btn-save {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background: var(--text-main);
+            color: var(--bg-gradient-1);
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-save:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* QR Integrado Opcional (Estilo Dot) */
+        .qr-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--card-border);
+        }
+        
+        .qr-icon {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .qr-icon:hover {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <!-- Contenedor del Perfil -->
+        <div class="profile-img-container">
+            <img id="user-avatar" src="" alt="Avatar" class="profile-img">
+        </div>
+        
+        <h1 id="user-name" class="profile-name"></h1>
+        <p id="user-title" class="profile-title"></p>
+        <p id="user-bio" class="profile-bio"></p>
+
+        <!-- Contenedor de Redes Sociales dinámicas -->
+        <div id="links-wrapper" class="links-container"></div>
+
+        <!-- Botón de Contacto principal -->
+        <a id="vcard-link" href="#" class="btn-save">
+            <i class="fa-solid fa-user-plus"></i> Guardar Contacto
+        </a>
+        
+        <!-- Icono QR discreto abajo -->
+        <div class="qr-section">
+            <i class="fa-solid fa-qrcode qr-icon" title="Compartir perfil"></i>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       SECCIÓN EDITABLE EN JAVASCRIPT
+       ========================================================================== */ -->
+    <script>
+        // 1. DATOS DEL PERFIL: Edita los textos entre comillas
+        const profileData = {
+            name: "Nombre Completo",
+            title: "Tu Profesión u Ocupación",
+            bio: "Una breve descripción sobre lo que haces, tu propósito o propuesta de valor en un par de líneas.",
+            avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80", // Pon aquí la URL de tu foto
+            vCardUrl: "#" // Enlace a tu archivo .vcf si deseas que descarguen tu contacto directo
+        };
+
+        // 2. REDES SOCIALES Y ENLACES: Añade, quita o edita los bloques que quieras
+        // Los iconos usan clases de FontAwesome (ej: 'fa-brands fa-whatsapp', 'fa-solid fa-globe')
+        const socialLinks = [
+            {
+                label: "WhatsApp",
+                icon: "fa-brands fa-whatsapp",
+                url: "https://wa.me/tu_numero"
+            },
+            {
+                label: "LinkedIn",
+                icon: "fa-brands fa-linkedin-in",
+                url: "https://linkedin.com/in/tu_usuario"
+            },
+            {
+                label: "Instagram",
+                icon: "fa-brands fa-instagram",
+                url: "https://instagram.com/tu_usuario"
+            },
+            {
+                label: "Sitio Web",
+                icon: "fa-solid fa-globe",
+                url: "https://tupagina.com"
+            }
+        ];
+
+        /* ==========================================================================
+           PROCESAMIENTO LOGICO (No necesitas modificar esto)
+           ========================================================================== */
+        document.getElementById('user-name').textContent = profileData.name;
+        document.getElementById('user-title').textContent = profileData.title;
+        document.getElementById('user-bio').textContent = profileData.bio;
+        document.getElementById('user-avatar').src = profileData.avatarUrl;
+        document.getElementById('vcard-link').href = profileData.vCardUrl;
+
+        const container = document.getElementById('links-wrapper');
+        socialLinks.forEach(link => {
+            const a = document.createElement('a');
+            a.href = link.url;
+            a.target = "_blank";
+            a.className = "social-link";
+            a.innerHTML = `<i class="${link.icon}"></i> ${link.label}`;
+            container.appendChild(a);
+        });
+    </script>
+</body>
+</html>
