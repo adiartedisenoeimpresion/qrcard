@@ -270,8 +270,11 @@
         </div>
     </div>
 
+    <!-- Librería externa para generar códigos QR de forma nativa y segura -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <!-- ==========================================================================
-       SECCIÓN EDITABLE EN JAVASCRIPT
+       SECCIÓN EDITABLE EN JAVASCRIPT (CORREGIDA)
        ========================================================================== */ -->
     <script>
         // 1. DATOS DEL PERFIL
@@ -308,7 +311,7 @@
         ];
 
         /* ==========================================================================
-           PROCESAMIENTO LOGICO Y ACTIVACIÓN DEL QR
+           PROCESAMIENTO LÓGICO Y ACTIVACIÓN DEL QR
            ========================================================================== */
         document.getElementById('user-name').textContent = profileData.name;
         document.getElementById('user-title').textContent = profileData.title;
@@ -326,18 +329,36 @@
             container.appendChild(a);
         });
 
-        // LÓGICA INTERACTIVA DEL CÓDIGO QR
+        // LÓGICA INTERACTIVA DEL CÓDIGO QR (NUEVA VERSIÓN)
         const qrTrigger = document.getElementById('qr-trigger');
         const qrModal = document.getElementById('qr-modal');
         const qrClose = document.getElementById('qr-close');
-        const qrImage = document.getElementById('qr-image');
+        const qrImageContainer = document.getElementById('qr-image');
+
+        // Variable para controlar si el QR ya fue creado y no duplicarlo
+        let qrGenerated = null;
 
         qrTrigger.addEventListener('click', () => {
-            // Detecta la URL actual de tu tarjeta en GitHub Pages automáticamente
             const currentUrl = window.location.href;
             
-            // Genera el código QR dinámicamente apuntando a tu página
-            qrImage.src = `https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=${encodeURIComponent(currentUrl)}`;
+            // Limpiamos el contenedor por si acaso
+            qrImageContainer.innerHTML = "";
+            
+            // Generamos el QR de forma nativa
+            qrGenerated = new QRCode(qrImageContainer, {
+                text: currentUrl,
+                width: 200,
+                height: 200,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // Ajuste visual para centrar el QR generado dentro del cuadro
+            const imgQr = qrImageContainer.querySelector('img');
+            if(imgQr) {
+                imgQr.style.margin = "0 auto";
+            }
             
             // Muestra la ventana emergente
             qrModal.classList.add('active');
